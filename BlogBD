@@ -1,0 +1,40 @@
+CREATE DATABASE blog;
+USE blog;
+CREATE TABLE autor(
+	IDAutor INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR(200) NOT NULL,
+    USUARIO VARCHAR(50) NOT NULL UNIQUE,
+    SENHA VARCHAR(255) NOT NULL
+);
+CREATE TABLE postagens(
+  IDPostagem INT PRIMARY KEY AUTO_INCREMENT,
+  TITULO VARCHAR(200),
+  TEXTO VARCHAR(500),
+  AUTOR INT,
+  FOREIGN KEY (AUTOR) REFERENCES autor(IDAutor)
+);
+CREATE TABLE visitantes(
+	IDVisitantes INT PRIMARY KEY AUTO_INCREMENT,
+    NOME VARCHAR (200),
+    EMAIL VARCHAR (300)
+);
+CREATE TABLE comentarios (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    visitante INT NOT NULL,
+    postagem INT NOT NULL,
+    comentario TEXT NOT NULL,
+    nota INT,
+    aprovado BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (visitante) REFERENCES visitantes(IDVisitantes),
+    FOREIGN KEY (postagem) REFERENCES postagens(IDPostagem)
+);
+CREATE USER 'clebinho_admin'@'localhost' IDENTIFIED BY 'SenhaForte1';
+GRANT ALL PRIVILEGES ON blog.* TO 'clebinho_admin'@'localhost';
+
+CREATE USER 'joao_autor'@'localhost' IDENTIFIED BY 'SenhaForte2';
+GRANT SELECT, INSERT, UPDATE, DELETE ON blog.postagens TO 'joao_autor'@'localhost';
+GRANT SELECT, UPDATE ON blog.comentarios TO 'joao_autor'@'localhost';
+
+CREATE USER 'maria_visitante'@'localhost' IDENTIFIED BY 'SenhaForte3';
+GRANT SELECT ON blog.postagens TO 'maria_visitante'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE ON blog.comentarios TO 'maria_visitante'@'localhost';
