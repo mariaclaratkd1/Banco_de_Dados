@@ -1,0 +1,50 @@
+create database biblioteca;
+use biblioteca;
+create table livros (
+	id_livro int primary key auto_increment,
+	titulo varchar(150) not null,
+    autor varchar(200) not null,
+    ano_publicado int 
+);
+
+INSERT INTO livros (titulo, autor, ano_publicado) 
+VALUES ('Cem Anos De Solidão', 'Gabriel García Marques', '1967'),
+    ('1984', 'George Orwell', '1949'),
+    ('Hora da Estrela', 'Clarisse Lispector', '1977'),
+    ('Crime e Castigo', 'Fyodor Dostoiévski', '1866'),
+    ('Americanah', 'Chimamanda Ngozi', '2013');
+
+create table usuario (
+	id_usuario int primary key auto_increment,
+	nome varchar(150) not null,
+    cpf varchar(20) not null,
+    telefone varchar(20)
+);
+INSERT INTO usuario (nome, cpf, telefone)
+VALUES ('Maria Clara', '07905063518', '71991139530'),
+	('Joao Pedro', '50631220255', '71992842169'),
+    ('Matias Leandro', '60264395114', '71986362598'),
+    ('Hugo Fernandes', '50246519823', '71985657432'),
+    ('Bruno Oliveira', '60234586211', '71992963334');
+
+create table emprestimo (
+    id_livros int not null,
+    id_usuario int not null,
+    data_emprestimo datetime,
+    data_devolucao datetime,
+    FOREIGN KEY (id_livros) REFERENCES livros (id_livro),
+    FOREIGN KEY (id_usuario) REFERENCES usuario (id_usuario)
+);
+INSERT INTO emprestimo (id_livros, id_usuario, data_emprestimo, data_devolucao)
+VALUES 
+	('1', '3', '2024-12-12', NULL),
+	('2', '5', '2024-04-10', NULL),
+    ('3', '1', '2024-12-10', '2025-04-10'),
+    ('4', '2', '2025-03-06', NULL),
+    ('5', '4', '2024-02-25', '2025-03-22');
+
+SELECT u.*, e.*, l.* 
+FROM usuario u
+JOIN emprestimo e ON u.id_usuario = e.id_usuario 
+JOIN livros l ON e.id_livros = l.id_livro
+WHERE e.data_devolucao IS NULL;
